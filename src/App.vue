@@ -1,18 +1,18 @@
 <template>
 <div id="app">
-  <search searchtip="请输入一下子"/>
-  <!-- <test /> -->
+  <!-- <search searchtip="请输入一下子"/> -->
+  <todo-list />
 </div>
 </template>
 
 <script>
-import Search from './components/search/index.vue'
-import test from './components/other/test.vue'
+import Search from './components/search'
+import TodoList from './components/todolist'
 export default {
   name: 'App',
   components: {
     Search,
-    test
+    TodoList
   }
 }
 </script>
