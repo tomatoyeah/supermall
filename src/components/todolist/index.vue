@@ -2,7 +2,7 @@
  * @Description:
  * @Reference: https://www.bilibili.com/video/BV1Zy4y1K7SH?p=70
  * @Date: 2021-11-22
- * @LastEditTime: 2021-11-11
+ * @LastEditTime: 2021-11-25
 -->
 <template>
     <div class="todolist">
@@ -64,17 +64,8 @@ export default {
     data() {
         return {
             value: "",
-            list: [
-                {
-                    done: false,
-                    thing: "按时吃饭",
-                },
-                {
-                    done: false,
-                    thing: "保持开心",
-                },
-            ],
-            selectall: false,
+            // list初始化是从本地存储中去取
+            list: JSON.parse(localStorage.getItem("list")) || [],
             selectindex: -1,
         };
     },
@@ -82,12 +73,26 @@ export default {
         havedone() {
             return this.list.filter((list) => list.done).length;
         },
+        selectall() {
+            return this.havedone == this.list.length && this.list.length > 0;
+        },
+    },
+    watch: {
+        // list一旦修改，就往本地存储一份
+        list: {
+            // 深度监视
+            deep: true,
+            handler(value) {
+                localStorage.setItem("list", JSON.stringify(value));
+            },
+        },
     },
     methods: {
         // 新增代办事件
         AddThing() {
             if (this.value) {
                 this.list.unshift({ done: false, thing: this.value });
+                this.value = "";
             } else {
                 alert("代办事件不能为空哦");
             }
@@ -97,7 +102,6 @@ export default {
             this.selectindex = index;
         },
         DeleteThing(index) {
-            console.log("delete", this.list[index], index);
             var result = [];
             this.list.forEach((elem, i) => {
                 if (i != index) {
@@ -109,15 +113,17 @@ export default {
 
         // 全选/反选代办事件
         SeclectAllThings() {
-            this.selectall = !this.selectall;
+            var bool = !this.selectall;
             this.list.forEach((elem) => {
-                elem.done = this.selectall;
+                elem.done = bool;
             });
         },
 
         // 删除已完成代办
         DeleteDone() {
-            this.list = this.list.filter((list) => !list.done);
+            if (confirm("确定要删除吗~")) {
+                this.list = this.list.filter((list) => !list.done);
+            }
         },
     },
 };
