@@ -26,12 +26,28 @@
                 :key="index"
                 @click="ChosedThing(index)"
             >
+                <!-- 勾选框 -->
                 <div
                     class="donebutton"
                     :class="item.done ? 'havedone' : 'notdone'"
                     @click="item.done = !item.done"
                 />
-                <div class="thing">{{ item.thing }}</div>
+                <!-- 内容 -->
+                <div class="thing" v-show="!item.isEdit">{{ item.thing }}</div>
+                <input
+                    :ref="`setfocus${index}`"
+                    type="text"
+                    class="thing thing-in"
+                    v-show="item.isEdit"
+                    :value="item.thing"
+                    @blur="handleBlur(item, $event)"
+                />
+                <!-- 操作按钮 -->
+                <div
+                    class="edit"
+                    @click="EditThing(item, index)"
+                    v-if="selectindex == index"
+                />
                 <div
                     class="delete"
                     @click="DeleteThing(index)"
@@ -91,7 +107,11 @@ export default {
         // 新增代办事件
         AddThing() {
             if (this.value) {
-                this.list.unshift({ done: false, thing: this.value });
+                this.list.unshift({
+                    done: false,
+                    thing: this.value,
+                    isEdit: false,
+                });
                 this.value = "";
             } else {
                 alert("代办事件不能为空哦");
@@ -100,6 +120,21 @@ export default {
         // 选中某一个代办事件
         ChosedThing(index) {
             this.selectindex = index;
+        },
+        EditThing(item, index) {
+            item.isEdit = true;
+            // 让焦点在input框上 
+            // nextTick所指定的回调会在dom更新之后再进行
+            this.$nextTick(function(){
+                // console.log(this.$refs[`setfocus${index}`])
+                this.$refs[`setfocus${index}`].focus()
+            })
+        },
+        //是去焦点时
+        handleBlur(item, e){
+            item.isEdit = false
+            if(!e.target.value) return alert('输入不能为空哦')
+            item.thing = e.target.value
         },
         DeleteThing(index) {
             var result = [];
@@ -189,6 +224,10 @@ export default {
                 bottom: 5px;
                 left: 5px;
             }
+            .thing-in {
+                height: 16px;
+                font-size: 20px;
+            }
             .delete {
                 width: 25px;
                 height: 25px;
@@ -196,6 +235,16 @@ export default {
                 right: 10px;
                 top: 10px;
                 background: url("../../assets/img/components/todolist/cancle.png")
+                    no-repeat;
+                background-size: contain;
+            }
+            .edit {
+                width: 25px;
+                height: 25px;
+                position: absolute;
+                right: 45px;
+                top: 10px;
+                background: url("../../assets/img/components/todolist/edit.png")
                     no-repeat;
                 background-size: contain;
             }
