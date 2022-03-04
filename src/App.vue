@@ -1,18 +1,21 @@
 <template>
 <div id="app">
   <!-- <search searchtip="请输入一下子"/> -->
-  <todo-list />
+  <!-- <todo-list /> -->
+  <test/>
 </div>
 </template>
 
 <script>
 import Search from './components/search'
 import TodoList from './components/todolist'
+import Test from './components/test'
 export default {
   name: 'App',
   components: {
     Search,
-    TodoList
+    TodoList,
+    Test
   }
 }
 </script>
