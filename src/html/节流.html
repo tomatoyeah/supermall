@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>计数器<span>0</span><button>点我+1</button></div>
+</body>
+</html>
+<script>
+    let span = document.querySelector('span')
+    let button = document.querySelector('button')
+    let count = 0
+    // 节流函数(定时器)
+    function throttle(func,time){
+        let timer = null
+        return function(){
+            if(!timer){
+                func()
+                timer = setTimeout(() => {
+                    timer = null
+                }, time);
+            }
+        }
+    }
+    // 节流函数(时间戳)
+    function throttle2(func,time){
+        let last = 0
+        return function(){
+            var now = new Date().getTime()
+            if(now-last>time){
+                func()
+                last = new Date().getTime()
+            }
+        }
+    }
+    // 功能函数
+    function func () {
+        count++
+        span.innerHTML = count
+    }
+    // 在1s之内只执行一次
+    button.onclick = throttle(func,1000)
+</script>
