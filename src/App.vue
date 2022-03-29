@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import test from './components/pagination'
+import test from './components/test'
 export default {
   name: 'App',
   components: {

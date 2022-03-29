@@ -14,6 +14,9 @@
                 <span v-else>↓</span>
             </div>
         </div>
+        <div>
+            <input autocomplete="on"  type="text">
+        </div>
     </div>
 </template>
 
